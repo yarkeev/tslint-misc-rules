@@ -3,5 +3,4 @@
 typings
 test
 *.log
-ts*.json
 yarn.lock
