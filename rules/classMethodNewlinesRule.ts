@@ -6,22 +6,25 @@ import { nodeIsKind } from '../helpers/nodeIsKind'
 
 export class Rule extends Lint.Rules.AbstractRule {
 	public apply(sourceFile: ts.SourceFile) {
-		return this.applyWithFunction(sourceFile, walk)
+		return this.applyWithFunction(sourceFile, walk.bind(null, this.getOptions()))
 	}
 }
 
-function walk(ctx: Lint.WalkContext<void>) {
+function walk(options: any, ctx: Lint.WalkContext<void>) {
 	ts.forEachChild(ctx.sourceFile, function cb(node: ts.Node): void {
 		if (nodeIsKind(node, 'ClassDeclaration') || nodeIsKind(node, 'ClassExpression')) {
-			checkClass(ctx, node as ts.ClassLikeDeclaration)
+			checkClass(options, ctx, node as ts.ClassLikeDeclaration)
 		}
 		return ts.forEachChild(node, cb)
 	})
 }
 
-function checkClass(ctx: Lint.WalkContext<void>, node: ts.ClassLikeDeclaration) {
+function checkClass(options, ctx: Lint.WalkContext<void>, node: ts.ClassLikeDeclaration) {
 	const sf = ctx.sourceFile
 	const methods = getClassMethods(node)
+	const isPaddedClasses =
+		options &&
+		options.ruleArguments.filter(item => item['padded-classes'] === true).length > 0
 
 	methods.reduce((previousMethod, method) => {
 		const leadingWhitespace = getLeadingWhitespace(method)
@@ -31,7 +34,8 @@ function checkClass(ctx: Lint.WalkContext<void>, node: ts.ClassLikeDeclaration) 
 		const isInOverloadGroup =
 			method !== previousMethod &&
 			method.name.getText(sf) === previousMethod.name.getText(sf)
-		const expectedNewlines = isFirstMethod || isInOverloadGroup ? 1 : 2
+		const expectedNewlines =
+			(isFirstMethod && !isPaddedClasses) || isInOverloadGroup ? 1 : 2
 
 		if (
 			newlineCount < expectedNewlines ||
