@@ -69,24 +69,4 @@ class ReactLifecyleOrderRule extends Lint.RuleWalker {
 			}
 		})
 	}
-
-	private isReactComponent(node: ts.ClassLikeDeclaration) {
-		if (!node.heritageClauses || node.heritageClauses.length !== 1) {
-			return false
-		}
-
-		const ancestor = node.heritageClauses[0].types[0]
-		if (!ancestor) {
-			return false
-		}
-
-		return (
-			[
-				'React.Component',
-				'React.PureComponent',
-				'Component',
-				'PureComponent',
-			].indexOf(ancestor.getText(this.getSourceFile()).replace(/<.+?>$/, '')) > -1
-		)
-	}
 }
