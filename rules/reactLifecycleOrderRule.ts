@@ -42,10 +42,6 @@ class ReactLifecyleOrderRule extends Lint.RuleWalker {
 	}
 
 	private validate(node: ts.ClassLikeDeclaration) {
-		if (!this.isReactComponent(node)) {
-			return
-		}
-
 		const sf = this.getSourceFile()
 		const relevantMethods = getClassMethods(node).filter(
 			method => this.expectedOrder.indexOf(method.name.getText(sf)) > -1
