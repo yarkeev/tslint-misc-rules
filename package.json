@@ -1,6 +1,6 @@
 {
-  "name": "tslint-misc-rules",
-  "version": "3.3.1",
+  "name": "tslint-misc-rules-fixed",
+  "version": "1.0.0",
   "description": "Collection of miscellaneous TSLint rules",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "precommit": "lint-staged",
     "test": "node test/runner.js",
     "watch": "tsc --watch & node test/watch",
-    "postinstall": "npm run build"
+    "prepublish": "npm run build"
   },
   "lint-staged": {
     "*.ts": [
