@@ -1,5 +1,5 @@
 {
-  "name": "tslint-misc-rules-fixed",
+  "name": "@my/tslint-misc-rules",
   "version": "1.0.0",
   "description": "Collection of miscellaneous TSLint rules",
   "main": "index.js",
